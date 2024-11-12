@@ -79,7 +79,9 @@
                             echo "Em dia";
                         }
                         echo "</td> 
-                        <td><a href=\"anuidades.php\" class=\"btn btn-outline-success\">Ver</a></td>
+                        <td><a href=\"anuidades.php?id=";
+                        echo $row["id"];
+                        echo "\" class=\"btn btn-outline-success\">Ver</a></td>
                         <td>";
                         if(mysqli_num_rows($check)>0){
                             $sql = "SELECT SUM(valor) AS divida FROM anuidade WHERE ";

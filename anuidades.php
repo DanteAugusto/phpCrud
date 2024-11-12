@@ -13,7 +13,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <nav class="navbar navbar-expand-lg bg-info-subtle">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Anuidades de </a>
+            <a class="navbar-brand" href="#">
+                <?php
+                    $sql = "SELECT nome FROM associado WHERE id=".$_GET['id'];
+                    $result = mysqli_query($conn, $sql);
+                    if(mysqli_num_rows($result)>0){
+                        echo "Anuidades de ".$result->fetch_assoc()["nome"];
+                    }else{
+                        echo "Quem é você?";
+                    }
+                    if (isset($_GET['quita']) && isset($_GET['anuidade_id'])){
+                        $sql = "UPDATE associado_anuidade SET quitado = 1 WHERE associado_id = ".$_GET['id']." AND anuidade_id = ".$_GET['anuidade_id'];
+                        $result = mysqli_query($conn, $sql);
+                    }
+                ?>
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
@@ -48,89 +62,46 @@
         </div>
     </nav>
     <?php
-        $sql = "SELECT * FROM associado";
+
+        $sql = "SELECT * FROM associado_anuidade where associado_id = ".$_GET['id'];;
         $result = mysqli_query($conn, $sql);
         if(mysqli_num_rows($result)>0){
             echo "<table class=\"table\">
                     <thead>
                         <tr>
-                        <th scope=\"col\">Nome</th>
-                        <th scope=\"col\">E-mail</th>
-                        <th scope=\"col\">CPF</th>
-                        <th scope=\"col\">Data de filiação</th>
-                        <th scope=\"col\">Pagamento</th>    
-                        <th scope=\"col\">Anuidades</th> 
-                        <th scope=\"col\">Dívida total</th>      
+                        <th scope=\"col\">Ano</th>
+                        <th scope=\"col\">Valor</th>
+                        <th scope=\"col\">
+                            Situação
+                        </th>
+                        <th scope=\"col\">Alterar Valor</th>
                         </tr>
                     </thead>
                     <tbody>";
             while($row = mysqli_fetch_assoc($result)){
-                echo "<tr>
-                        <td>".$row["nome"]."</td>
-                        <td>".$row["email"]."</td>
-                        <td>".$row["cpf"]."</td>
-                        <td>".$row["data_filiacao"]."</td> 
-                        <td>";
-                        $sql = "SELECT * FROM associado_anuidade WHERE quitado = 0 AND associado_id =".$row["id"];
-                        $check = mysqli_query($conn, $sql);
-                        if(mysqli_num_rows($check)>0){
-                            echo "Em atraso";
-                        }else{
-                            echo "Em dia";
-                        }
-                        echo "</td> 
-                        <td><a href=\"anuidades.php\" class=\"btn btn-outline-success\">Ver</a></td>
-                        <td>";
-                        if(mysqli_num_rows($check)>0){
-                            $sql = "SELECT SUM(valor) AS divida FROM anuidade WHERE ";
-                            while($id = mysqli_fetch_assoc($check)){
-                                $sql= $sql."id=".$id["anuidade_id"]." OR ";
-                            }
-                            $sql= $sql."id=0";
-                            $check = mysqli_query($conn, $sql);
-                            echo $check->fetch_assoc()["divida"];
-                        }else{
-                            echo "0";
-                        }
-                        echo "</td>
-                      </tr>";
+                $sql = "SELECT * FROM anuidade where id = ".$row["anuidade_id"];
+                $anuidade = mysqli_query($conn, $sql);
+                $anuidade = $anuidade->fetch_assoc();
+                // <td>31/02/1438</td> 
+                // <td>R$1000</td>
+                // <td>Quitada</td> 
+                // <td><a href="anuidade.php" class="btn btn-outline-success">Altere</a></td>
+                echo "<tr>";
+                echo "<td>".$anuidade["ano"]."</td>";
+                echo "<td>".$anuidade["valor"]."</td>";
+                echo "<td>";
+                if($row["quitado"]){
+                    echo "Quitada";
+                }else{
+                    echo "<a href=\"anuidades.php?id=".$_GET["id"]."&quita=1&anuidade_id=".$anuidade["id"]."\" class=\"btn btn-outline-danger\">Dívida (Aperte para quitar)</a>";
+                }
+                echo"</td>";
+                echo "<td><a href=\"anuidade.php?id=".$anuidade["id"]."\" class=\"btn btn-outline-success\">Altere</a></td>";
+                echo "</tr>";
             }
             echo "</tbody></table>";
         }
     ?>
-    <table class="table">
-        <thead>
-            <tr>
-            <th scope="col">Ano</th>
-            <th scope="col">Valor</th>
-            <th scope="col">
-                Situação
-            </th>
-            <th scope="col">Alterar Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>31/02/1438</td> 
-                <td>R$1000</td>
-                <td>Quitada</td> 
-                <td><a href="anuidade.php" class="btn btn-outline-success">Altere</a></td>
-            </tr>
-            <tr>
-                <td>31/02/1438</td> 
-                <td>R$1000</td>
-                <!-- <td>Dívida</td>  -->
-                <td><a href="anuidade.php" class="btn btn-outline-danger">Dívida (Aperte para quitar)</a></td>
-                <td><a href="anuidade.php" class="btn btn-outline-success">Altere</a></td>
-            </tr>
-            <tr>
-                <td>31/02/1438</td> 
-                <td>R$1000</td>
-                <td>Dívida</td> 
-                <td><a href="anuidade.php" class="btn btn-outline-success">Altere</a></td>
-            </tr>
-        </tbody>
-    </table>
     <a href="cadastrarAnuidade.php">
         <button type="button" class="btn btn-info" style="margin-left: 2px;">Cadastre Anuidade</button>
     </a>

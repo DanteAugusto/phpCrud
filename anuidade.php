@@ -47,15 +47,31 @@
         </div>
     </nav>
 </body>
-<form style="padding-left: 10px; padding-right: 10px">
+<form style="padding-left: 10px; padding-right: 10px" action="actions/atualizar_anuidade.php" method="post">
     <div class="mb-3">
         <label for="exampleInputAno" class="form-label">Ano</label>
-        <input type="number" class="form-control" id="exampleInputAno" aria-describedby="anoHelp">
-        <div id="anoHelp" class="form-text">Esse valor não pode ser alterado.</div>
+        <input type="number" class="form-control" name="ano" disabled value=
+        <?php 
+            $sql = "SELECT * FROM anuidade where id = ".$_GET["id"];
+            $result = mysqli_query($conn, $sql);
+            echo $result->fetch_assoc()["ano"];
+        ?> id="exampleInputAno" aria-describedby="anoHelp">
     </div>
     <div class="mb-3">
         <label for="exampleInputValor1" class="form-label">Valor</label>
-        <input type="text" class="form-control" id="exampleInputValor" aria-describedby="anoHelp">
+        <input type="text" class="form-control" name="valor" id="exampleInputValor" aria-describedby="anoHelp" value=
+        <?php 
+            $sql = "SELECT * FROM anuidade where id = ".$_GET["id"];
+            $result = mysqli_query($conn, $sql);
+            echo $result->fetch_assoc()["valor"];
+        ?>>        
+    </div>
+    <div class="mb-3">
+        <input type="hidden" id="custId" name="id" value=<?php 
+                $sql = "SELECT * FROM anuidade where id = ".$_GET["id"];
+                $result = mysqli_query($conn, $sql);
+                echo $result->fetch_assoc()["id"];
+            ?>>
     </div>
     <button type="submit" class="btn btn-primary">Confirme</button>
 </form>
