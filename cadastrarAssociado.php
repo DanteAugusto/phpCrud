@@ -1,3 +1,6 @@
+<?php
+    include("config.php")
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,27 +47,30 @@
         </div>
     </nav>
 </body>
-<form style="padding-left: 10px; padding-right: 10px">
+<form style="padding-left: 10px; padding-right: 10px" action="actions/cadastrar_associado.php" method="post">
     <div class="mb-3">
         <label for="exampleInputNome" class="form-label">Nome</label>
-        <input type="text" class="form-control" id="exampleInputNome" aria-describedby="anoHelp">
-        <!-- <div id="anoHelp" class="form-text">Esse valor não pode ser alterado.</div> -->
+        <input type="text" class="form-control" name="nome" aria-describedby="anoHelp">
+        <!-- <div  class="form-text">Esse valor não pode ser alterado.</div> -->
     </div>
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Endereço de Email</label>
-        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-        <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+        <input type="email" class="form-control" name="email"  aria-describedby="emailHelp">
+        <!-- <div  class="form-text">We'll never share your email with anyone else.</div> -->
     </div>
     <div class="mb-3">
         <label for="exampleInputNome" class="form-label">CPF</label>
-        <input type="text" class="form-control" id="exampleInputNome" aria-describedby="anoHelp">
-        <!-- <div id="anoHelp" class="form-text">Esse valor não pode ser alterado.</div> -->
+        <input type="text" class="form-control" name="cpf" aria-describedby="anoHelp">
+        <!-- <div  class="form-text">Esse valor não pode ser alterado.</div> -->
     </div>
     <div class="mb-3">
         <label for="exampleInputNome" class="form-label">Data de Filiação</label>
-        <input type="date" class="form-control" id="exampleInputNome" aria-describedby="anoHelp">
-        <!-- <div id="anoHelp" class="form-text">Esse valor não pode ser alterado.</div> -->
+        <input type="date" class="form-control" name="date" aria-describedby="anoHelp">
+        <!-- <div  class="form-text">Esse valor não pode ser alterado.</div> -->
     </div>
     <button type="submit" class="btn btn-primary">Confirme</button>
 </form>
 </html>
+<?php
+    $conn->close();
+?>

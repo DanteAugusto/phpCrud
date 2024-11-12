@@ -1,3 +1,6 @@
+<?php
+    include("config.php")
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,16 +47,19 @@
         </div>
     </nav>
 </body>
-<form style="padding-left: 10px; padding-right: 10px">
+<form style="padding-left: 10px; padding-right: 10px" action="actions/cadastrar_anuidade.php" method="post">
     <div class="mb-3">
         <label for="exampleInputAno" class="form-label">Ano</label>
-        <input type="number" class="form-control" id="exampleInputAno" aria-describedby="anoHelp">
+        <input type="number" class="form-control" id="exampleInputAno" name="ano" aria-describedby="anoHelp">
         <!-- <div id="anoHelp" class="form-text">Esse valor não pode ser alterado.</div> -->
     </div>
     <div class="mb-3">
         <label for="exampleInputValor1" class="form-label">Valor</label>
-        <input type="text" class="form-control" id="exampleInputValor" aria-describedby="anoHelp">
+        <input type="text" class="form-control" id="exampleInputValor" name="valor" aria-describedby="anoHelp">
     </div>
     <button type="submit" class="btn btn-primary">Confirme</button>
 </form>
 </html>
+<?php
+    $conn->close();
+?>

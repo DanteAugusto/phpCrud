@@ -1,3 +1,6 @@
+<?php
+    include("config.php")
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,3 +60,6 @@
     <button type="submit" class="btn btn-primary">Confirme</button>
 </form>
 </html>
+<?php
+    $conn->close();
+?>

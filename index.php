@@ -1,3 +1,6 @@
+<?php
+    include("config.php")
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -44,7 +47,58 @@
             </div>
         </div>
     </nav>
-    <table class="table">
+    <?php
+        $sql = "SELECT * FROM associado";
+        $result = mysqli_query($conn, $sql);
+        if(mysqli_num_rows($result)>0){
+            echo "<table class=\"table\">
+                    <thead>
+                        <tr>
+                        <th scope=\"col\">Nome</th>
+                        <th scope=\"col\">E-mail</th>
+                        <th scope=\"col\">CPF</th>
+                        <th scope=\"col\">Data de filiação</th>
+                        <th scope=\"col\">Pagamento</th>    
+                        <th scope=\"col\">Anuidades</th> 
+                        <th scope=\"col\">Dívida total</th>      
+                        </tr>
+                    </thead>
+                    <tbody>";
+            while($row = mysqli_fetch_assoc($result)){
+                echo "<tr>
+                        <td>".$row["nome"]."</td>
+                        <td>".$row["email"]."</td>
+                        <td>".$row["cpf"]."</td>
+                        <td>".$row["data_filiacao"]."</td> 
+                        <td>";
+                        $sql = "SELECT * FROM associado_anuidade WHERE quitado = 0 AND associado_id =".$row["id"];
+                        $check = mysqli_query($conn, $sql);
+                        if(mysqli_num_rows($check)>0){
+                            echo "Em atraso";
+                        }else{
+                            echo "Em dia";
+                        }
+                        echo "</td> 
+                        <td><a href=\"anuidades.php\" class=\"btn btn-outline-success\">Ver</a></td>
+                        <td>";
+                        if(mysqli_num_rows($check)>0){
+                            $sql = "SELECT SUM(valor) AS divida FROM anuidade WHERE ";
+                            while($id = mysqli_fetch_assoc($check)){
+                                $sql= $sql."id=".$id["anuidade_id"]." OR ";
+                            }
+                            $sql= $sql."id=0";
+                            $check = mysqli_query($conn, $sql);
+                            echo $check->fetch_assoc()["divida"];
+                        }else{
+                            echo "0";
+                        }
+                        echo "</td>
+                      </tr>";
+            }
+            echo "</tbody></table>";
+        }
+    ?>
+    <!-- <table class="table">
         <thead>
             <tr>
             <th scope="col">Nome</th>
@@ -82,9 +136,12 @@
             <td><a href="anuidades.php" class="btn btn-outline-success">Ver</a></td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
     <a href="cadastrarAssociado.php">
         <button type="button" class="btn btn-info" style="margin-left: 2px;">Cadastre Associado</button>
     </a>
   </body>
 </html>
+<?php
+    $conn->close();
+?>
